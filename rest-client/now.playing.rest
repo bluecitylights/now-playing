@@ -1,0 +1,12 @@
+ @access_token = {{$dotenv access_token}}
+
+###
+GET http://127.0.0.1:8000/currently-playing
+Authorization: {{access_token}}
+
+### 
+
+GET https://api.spotify.com/v1/me/player/currently-playing
+Authorization: Bearer {{access_token}}
+
+
