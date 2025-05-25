@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h2>Now Playing</h2>
+  <img src="{{ album.image }}" alt="Album cover" style="max-width: 300px;"><br>
+  <p><strong>Track:</strong> {{ album.track }}</p>
+  <p><strong>Artist:</strong> {{ album.artist }}</p>
+  <p><strong>Album:</strong> {{ album.album }}</p>
+  <p><a href="/logout">Logout</a></p>
+{% endblock %}
