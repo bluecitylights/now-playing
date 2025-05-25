@@ -1,7 +1,6 @@
 import os
-from fastapi import FastAPI, Request
+from fastapi import FastAPI
 from starlette.middleware.sessions import SessionMiddleware
-from fastapi.responses import HTMLResponse
 from app.routers.pages import router as pages_router
 from app.routers.auth import router as auth_router
 from app.routers.now_playing import router as now_playing_router

@@ -1,18 +1,14 @@
+import os
 from fastapi import APIRouter, Request
+from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
-
+from app.core.session import get_user_from_session
 router = APIRouter()
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+templates = Jinja2Templates(directory=os.path.join(BASE_DIR, "templates"))
 
 @router.get("/", response_class=HTMLResponse)
 async def home(request: Request):
-    user = request.session.get("user")
-    if user:
-        return HTMLResponse(f"""
-            <h1>Welcome {user['display_name']}!</h1>
-            <p><a href="/now-playing">See Now Playing</a></p>
-            <p><a href="/logout">Logout</a></p>
-        """)
-    else:
-        return HTMLResponse("""
-            <h1>Welcome! Please <a href="/login">login with Spotify</a></h1>
-        """)
+    user = get_user_from_session(request)
+    return templates.TemplateResponse("home.html", {"request": request, "user": user})
