@@ -2,9 +2,15 @@
 
 {% block content %}
   <h2>Now Playing</h2>
-  <img src="{{ album.image }}" alt="Album cover" style="max-width: 300px;"><br>
-  <p><strong>Track:</strong> {{ album.track }}</p>
-  <p><strong>Artist:</strong> {{ album.artist }}</p>
-  <p><strong>Album:</strong> {{ album.album }}</p>
-  <p><a href="/logout">Logout</a></p>
+
+  {% if playback %}
+    {% include "partials/track_info.html" %}
+    {% include "partials/progress.html" %}
+  {% else %}
+    <p>Nothing is currently playing.</p>
+  {% endif %}
+
+  <p><a href="/">Back to Home</a></p>
+  
+  <script src="{{ url_for('static', path='js/now_playing.js') }}"></script>
 {% endblock %}

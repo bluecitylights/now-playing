@@ -3,10 +3,9 @@ from fastapi import APIRouter, Request
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
 from app.core.session import get_user_from_session
-router = APIRouter()
+from app.core.templates import templates
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-templates = Jinja2Templates(directory=os.path.join(BASE_DIR, "templates"))
+router = APIRouter()
 
 @router.get("/", response_class=HTMLResponse)
 async def home(request: Request):

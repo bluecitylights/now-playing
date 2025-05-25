@@ -1,38 +1,68 @@
+from http.client import HTTPException
 import os
 import time
 from fastapi import APIRouter, Request
 from fastapi.templating import Jinja2Templates
-from fastapi.responses import RedirectResponse, HTMLResponse
+from fastapi.responses import HTMLResponse
 from app.core.auth import get_valid_access_token
 import httpx
+from fastapi import APIRouter, Request, HTTPException
+from fastapi.responses import HTMLResponse, JSONResponse
+from app.core.auth import get_valid_access_token
+from app.core.spotify import get_current_playback
+from app.core.session import get_user_from_session
+from app.core.templates import templates
 
 router = APIRouter()
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-templates = Jinja2Templates(directory=os.path.join(BASE_DIR, "templates"))
-
-@router.get("/now-playing", response_class=HTMLResponse)
+@router.get("/now-playing")
 async def now_playing(request: Request):
-    try:
-        access_token = await get_valid_access_token(request)
-    except Exception:
-        return RedirectResponse("/")
+    user = get_user_from_session(request)
+    access_token = await get_valid_access_token(request)
+    playback = await get_current_playback(access_token)
+    track = playback["item"]
+    return templates.TemplateResponse(
+        "now_playing.html",
+        {
+            "request": request,
+            "user": user,
+            "track": track,
+            "playback": playback
+        },
+    )
 
-    async with httpx.AsyncClient() as client:
-        resp = await client.get(
-            "https://api.spotify.com/v1/me/player/currently-playing",
-            headers={"Authorization": f"Bearer {access_token}"},
-        )
-        if resp.status_code == 204:
-            return HTMLResponse("<h2>No track is currently playing</h2>")
-        resp.raise_for_status()
-        data = resp.json()
+@router.get("/now-playing/progress")
+async def now_playing_progress(request: Request):
+    access_token = await get_valid_access_token(request)
+    playback = await get_current_playback(access_token)
 
-    album_info = {
-        "track": data["item"]["name"],
-        "artist": data["item"]["artists"][0]["name"],
-        "album": data["item"]["album"]["name"],
-        "image": data["item"]["album"]["images"][0]["url"]
-    }
+    if not playback or not playback.get("item"):
+        return JSONResponse(content={"track_id": None, "progress_ms": 0, "duration_ms": 0})
 
-    return templates.TemplateResponse("now_playing.html", {"request": request, "album": album_info})
+    track = playback["item"]
+    return JSONResponse(
+        content={
+            "track_id": track["id"],
+            "progress_ms": playback.get("progress_ms", 0),
+            "duration_ms": track.get("duration_ms", 0)
+        }
+    )
+
+
+@router.get("/now-playing/track-info", response_class=HTMLResponse)
+async def now_playing_track_info(request: Request):
+    access_token = await get_valid_access_token(request)
+    playback = await get_current_playback(access_token)
+
+    if not playback or not playback.get("item"):
+        return HTMLResponse(content="<p>No track playing</p>")
+
+    track = playback["item"]
+    from fastapi.templating import Jinja2Templates
+    return templates.TemplateResponse(
+        "partials/track_info.html",
+        {
+            "request": request, 
+            "track": track
+        },
+    )

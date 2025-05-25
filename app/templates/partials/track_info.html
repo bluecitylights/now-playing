@@ -1,0 +1,6 @@
+<div id="track-info">
+    <p>Track: {{ track.name }}</p>
+    <p>Artist: {{ track.artists | join(", ", attribute="name") }}</p>
+    <p>Album: {{ track.album.name }}</p>
+    <img src="{{ track.album.images[0].url }}" alt="Album cover" width="200" />
+</div>

@@ -57,3 +57,16 @@ async def refresh_access_token(refresh_token: str) -> dict:
         )
         response.raise_for_status()
         return response.json()
+    
+async def get_current_playback(access_token: str) -> dict | None:
+    url = "https://api.spotify.com/v1/me/player/currently-playing"
+    headers = {"Authorization": f"Bearer {access_token}"}
+    
+    async with httpx.AsyncClient() as client:
+        response = await client.get(url, headers=headers)
+        print(response)
+        if response.status_code == 204:  # No content, nothing is playing
+            return None
+        
+        response.raise_for_status()
+        return response.json()
