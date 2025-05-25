@@ -1,12 +1,26 @@
  @access_token = {{$dotenv access_token}}
+  @discogs_token = {{$dotenv discogs_token}}
 
 ###
+// @name current_playing
 GET http://127.0.0.1:8000/currently-playing
+Authorization: {{access_token}}
+
+@artist = {{current_playing.response.body.$.artist}}
+@album = {{current_playing.response.body.$.album}}
+
+###
+GET http://127.0.0.1:8000/current-album-info
 Authorization: {{access_token}}
 
 ### 
 
 GET https://api.spotify.com/v1/me/player/currently-playing
 Authorization: Bearer {{access_token}}
+
+
+###
+GET https://api.discogs.com/database/search?q={{artist}}+{{album}}&type=release&token={{discogs_token}}
+
 
 
