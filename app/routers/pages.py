@@ -1,6 +1,5 @@
 import os
 from fastapi import APIRouter, Request
-from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
 from app.core.session import get_user_from_session
 from app.core.templates import templates

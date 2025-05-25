@@ -2,7 +2,6 @@ from http.client import HTTPException
 import os
 import time
 from fastapi import APIRouter, Request
-from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
 from app.core.auth import get_valid_access_token
 import httpx

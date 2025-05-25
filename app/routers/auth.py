@@ -2,7 +2,6 @@ import os
 from fastapi import APIRouter, Request
 from fastapi.responses import RedirectResponse
 from app.core.auth import handle_callback, get_callback_url, logout_user
-from app.core.templates import templates
 
 router = APIRouter()
 

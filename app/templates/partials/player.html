@@ -1,0 +1,39 @@
+<script src="https://unpkg.com/htmx.org@1.9.10"></script>
+
+<div id="player-controls">
+    <button 
+      hx-post="/player/previous" 
+      hx-trigger="click" 
+      hx-target="#playback-status" 
+      hx-swap="innerHTML">
+      Previous
+    </button>
+  
+    <button 
+      hx-post="/player/play" 
+      hx-trigger="click" 
+      hx-target="#playback-status" 
+      hx-swap="innerHTML">
+      Play
+    </button>
+  
+    <button 
+      hx-post="/player/pause" 
+      hx-trigger="click" 
+      hx-target="#playback-status" 
+      hx-swap="innerHTML">
+      Pause
+    </button>
+  
+    <button 
+      hx-post="/player/next" 
+      hx-trigger="click" 
+      hx-target="#playback-status" 
+      hx-swap="innerHTML">
+      Next
+    </button>
+  </div>
+  
+  <div id="playback-status">
+    <!-- This will be replaced with the HTML response from the server -->
+  </div>
