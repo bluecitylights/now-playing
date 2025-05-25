@@ -1,23 +1,20 @@
-from fastapi import Request
+from fastapi import Request, Depends
 from app.core.spotify import (
-    get_spotify_auth_url,
-    exchange_code_for_token,
-    get_spotify_user,
-    refresh_access_token,
+    get_spotify_client, SpotifyApi
 )
 from app.core.session import store_user_session, clear_user_session, update_token_in_session, get_user_from_session
 import time
 
 
-def get_callback_url() -> str:
-    return get_spotify_auth_url()
+def get_callback_url(spotify_client: SpotifyApi) -> str:
+    return spotify_client.get_auth_url()
 
 
-async def handle_callback(request: Request, code: str) -> None:
-    tokens = await exchange_code_for_token(code)
+async def handle_callback(request: Request, code: str, spotify_client: SpotifyApi) -> None:
+    tokens = await spotify_client.exchange_code_for_token(code)
     access_token = tokens["access_token"]
 
-    user_data = await get_spotify_user(access_token)
+    user_data = await spotify_client.get_user(access_token)
 
     store_user_session(request, user_data, tokens)
 
