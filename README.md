@@ -29,3 +29,7 @@ capture the access_token, store in .env file in rest-client folder for testing w
 ```
 access_token = <token>
 ```
+
+```
+uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+```

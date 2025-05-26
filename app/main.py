@@ -1,3 +1,6 @@
+from dotenv import load_dotenv
+load_dotenv()
+
 import os
 from fastapi import FastAPI
 from starlette.middleware.sessions import SessionMiddleware

@@ -39,6 +39,7 @@ class SpotifyApi:
                 "scope": self.scopes,
                 "show_dialog": "true"
             }
+            print(params)
             return f"{self.auth_url}?{urlencode(params)}"
         
         async def _make_api_request(self,
