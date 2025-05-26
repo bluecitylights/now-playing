@@ -28,7 +28,7 @@ async def now_playing(request: Request, spotify_client: SpotifyApi = Depends(get
             "user": user,
             "track": track,
             "playback": playback
-        },
+        }
     )
 
 @router.get("/now-playing/progress")

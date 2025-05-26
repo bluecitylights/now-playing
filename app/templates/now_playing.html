@@ -1,17 +1,29 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <h2>Now Playing</h2>
+    <h2>Now Playing</h2>
 
-  {% if playback %}
-    {% include "partials/track_info.html" %}
-    {% include "partials/progress.html" %}
-    {% include "partials/player.html" %}
-  {% else %}
-    <p>Nothing is currently playing.</p>
-  {% endif %}
+    {% if playback %}
+        {% block track_info %}  
+          {% set track = track %}  
+          {% include "partials/track_info.html" %}
+        {% endblock %}
+        
+        {% if playback.item %}
+            {% set progress_ms = playback.progress_ms %}
+            {% set duration_ms = playback.item.duration_ms %}
+            {% include "partials/progress.html" %}
+        {% else %}
+            <p>Track progress not available.</p>
+        {% endif %}
+        
+        {% include "partials/player.html" %}
+        
+    {% else %}
+        <p>Nothing is currently playing.</p>
+    {% endif %}
 
-  <p><a href="/">Back to Home</a></p>
-  
-  <script src="{{ url_for('static', path='js/now_playing.js') }}"></script>
+    <p><a href="/">Back to Home</a></p>
+    
+    <script src="{{ url_for('static', path='js/now_playing.js') }}"></script>
 {% endblock %}
